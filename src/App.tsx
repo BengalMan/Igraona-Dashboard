@@ -12,13 +12,16 @@ import routerBindings, {
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-import dataProvider from './providers/data-provider'
-import ShowTournaments from "./content/tournaments/ShowTournaments";
-import Home from "./content/Home";
-import AppLayout from "./components/AppLayout/AppLayout";
-import CreateTournament from "./content/tournaments/create/CreateT";
-import EditTournament from "./content/tournaments/edit/EditT";
-import { resources } from "./config/resources";
+import dataProvider from './dashboardApp/providers/data-provider'
+import ShowTournaments from "./dashboardApp/content/tournaments/ShowTournaments";
+import Home from "./dashboardApp/content/Home";
+import CreateTournament from "./dashboardApp/content/tournaments/create/CreateT";
+import EditTournament from "./dashboardApp/content/tournaments/edit/EditT";
+import { resources } from "./dashboardApp/config/resources";
+import AppLayout from "./dashboardApp/components/AppLayout/AppLayout";
+import LandingApp from "./landingPage/LandingApp"
+import SignUpScreen from "./landingPage/landingTournaments/SignUpScreen";
+import ShowTLanding from "./landingPage/landingTournaments/ShowTLanding";
 
 function App() {
   return (
@@ -38,7 +41,9 @@ function App() {
             }}
           >
             <Routes>
-              <Route index element={<WelcomePage />} />
+              <Route index element={<LandingApp />} />
+              <Route path="/t" element={<ShowTLanding />} />
+              <Route path="/t/:id" element={<SignUpScreen />} />
               <Route element={<AppLayout />}>
                 <Route path="/tournaments" >
                   <Route index element={<ShowTournaments />} />
