@@ -1,22 +1,22 @@
-import React, { PropsWithChildren } from 'react';
-import { Layout, theme, List, Avatar } from 'antd';
-import { AntDesignOutlined } from '@ant-design/icons';
+import React, {PropsWithChildren} from 'react';
+import {Layout, theme, List, Avatar} from 'antd';
+import {AntDesignOutlined} from '@ant-design/icons';
 
-const { Content } = Layout;
+const {Content} = Layout;
 
-import { useList } from "@refinedev/core"
-import { CreateButton, DeleteButton, EditButton } from '@refinedev/antd';
-import { useNavigate } from 'react-router';
+import {useList} from "@refinedev/core"
+import {CreateButton, DeleteButton, EditButton} from '@refinedev/antd';
+import {useNavigate} from 'react-router';
 
 
-const ShowTLanding: React.FC<PropsWithChildren<{}>> = ({ children }) => {
+const ShowTLanding: React.FC<PropsWithChildren<{}>> = ({children}) => {
     const navigate = useNavigate()
 
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
-    const { data, isLoading } = useList({
+    const {data, isLoading} = useList({
         resource: "tournaments",
     })
 
@@ -26,9 +26,9 @@ const ShowTLanding: React.FC<PropsWithChildren<{}>> = ({ children }) => {
 
 
     return (
-        <Layout className="h-screen" style={{ display: 'flex', flexDirection: 'row' }}>
+        <Layout className="h-screen" style={{display: 'flex', flexDirection: 'row'}}>
 
-            <Layout style={{ flex: 1, backgroundColor: '#f0f2f5' }}>
+            <Layout style={{flex: 1, backgroundColor: '#f0f2f5'}}>
                 <Content
                     style={{
                         margin: '24px 16px',
@@ -43,12 +43,12 @@ const ShowTLanding: React.FC<PropsWithChildren<{}>> = ({ children }) => {
                         itemLayout="horizontal"
                         dataSource={data?.data}
                         renderItem={(turnir, index) => (
-                            <List.Item onClick={() => navigate(`/t/${turnir.id}`)} style={{ cursor: "pointer" }}>
+                            <List.Item onClick={() => navigate(`/t/${turnir.id}`)} style={{cursor: "pointer"}}>
                                 <List.Item.Meta
                                     avatar={
-                                        <Avatar icon={<AntDesignOutlined />} />
+                                        <Avatar icon={<AntDesignOutlined/>}/>
                                     }
-                                    title={turnir.tournamentName}
+                                    title={turnir.name}
                                     description={`ID turnira: ${turnir.id}`}
                                 />
                             </List.Item>

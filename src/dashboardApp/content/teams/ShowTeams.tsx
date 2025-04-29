@@ -1,22 +1,27 @@
-import React, {PropsWithChildren} from 'react';
-import {Layout, theme, Table, Avatar, Space} from 'antd';
-import {AntDesignOutlined} from '@ant-design/icons';
+import React, { PropsWithChildren } from 'react';
+import { Layout, theme, Table, Avatar, Space } from 'antd';
+import { AntDesignOutlined } from '@ant-design/icons';
 
-const {Content} = Layout;
+const { Content } = Layout;
 
-import {useList} from "@refinedev/core"
-import {CreateButton, DeleteButton, EditButton} from '@refinedev/antd';
-import {useNavigate} from 'react-router';
+import { useGo, useOne } from "@refinedev/core"
+import { CreateButton, DeleteButton, EditButton } from '@refinedev/antd';
+import { useNavigate, useParams } from 'react-router';
+import dataProvider from '../../providers/data-provider';
 
-const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
+const ShowTeams: React.FC<PropsWithChildren<{}>> = ({ children }) => {
+    const { id } = useParams();
+
     const navigate = useNavigate()
 
+
     const {
-        token: {colorBgContainer, borderRadiusLG},
+        token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const {data, isLoading} = useList({
+    const { data, isLoading } = useOne({
         resource: "tournaments",
+        id: id
     })
 
     const columns = [
@@ -24,33 +29,32 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
             title: 'Avatar',
             dataIndex: 'avatar',
             key: 'avatar',
-            render: () => <Avatar icon={<AntDesignOutlined/>}/>,
+            render: () => <Avatar icon={<AntDesignOutlined />} />,
         },
         {
-            title: 'Naziv turnira',
+            title: 'Naziv tima',
             dataIndex: 'name',
-            key: 'tournamentName',
-        },
-        {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
+            key: 'name',
         },
         {
             title: 'Akcije',
             key: 'actions',
             render: (_: any, record: any) => (
                 <Space>
-                    <EditButton hideText size="small" resource="tournaments" recordItemId={record.id}/>
-                    <DeleteButton hideText size="small" resource="tournaments" recordItemId={record.id}/>
+                    <EditButton hideText size="small" resource="participants" recordItemId={id} onClick={() => {
+                        navigate(`/tournaments/${id}/${record.id}/edit`)
+                    }} />
+                    <DeleteButton hideText size="small" resource="participants" recordItemId={id} meta={{ tName: `${record.name}` }} />
                 </Space>
             ),
         },
     ];
 
+    console.log(data?.data.teams);
+
     return (
-        <Layout className="h-screen" style={{display: 'flex', flexDirection: 'row'}}>
-            <Layout style={{flex: 1, backgroundColor: '#f0f2f5'}}>
+        <Layout className="h-screen" style={{ display: 'flex', flexDirection: 'row' }}>
+            <Layout style={{ flex: 1, backgroundColor: '#f0f2f5' }}>
                 <Content
                     style={{
                         margin: '24px 16px',
@@ -60,16 +64,17 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
                         borderRadius: borderRadiusLG,
                     }}
                 >
-                    <div style={{marginBottom: 16}}>
+
+                    <div style={{ marginBottom: 16 }}>
                         <CreateButton
                             resource="tournaments"
-                            onClick={() => navigate('/tournaments/new')}
+                            onClick={() => navigate(`/tournaments/${id}/new`)}
                         />
                     </div>
 
                     <Table
                         loading={isLoading}
-                        dataSource={data?.data}
+                        dataSource={data?.data.teams}
                         columns={columns}
                         rowKey="id"
                         pagination={{
@@ -80,7 +85,7 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
                             onClick: (event) => {
                                 const target = event.target as HTMLElement;
                                 if (target.closest('button')) return;
-                                navigate(`/tournaments/${record.id}`);
+                                navigate(`/tournaments/${id}/${record.name}`);
                             },
                         })}
                     />
@@ -92,4 +97,4 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
     );
 };
 
-export default ShowTournaments;
+export default ShowTeams;

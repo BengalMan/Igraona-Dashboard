@@ -18,11 +18,11 @@ function LandingScreen() {
   const navigate = useNavigate()
 
   const handleNavigate = () => {
-    navigate('/tt4')
+    navigate('/t')
   }
 
   return (
-    <div className="w-screen h-svh bg-red-200">
+    <div className="w-screen h-svh bg-red-200 russo">
       <div className="igraona h-full md:h-[110vh] w-full bg-[#161616] relative bg-cover bg-no-repeat" style={{
         backgroundImage: `url(${Pozadina})`,
         backgroundPosition: "calc(50%) center",
@@ -48,7 +48,7 @@ function LandingScreen() {
       <div className="hidden md:flex w-[140%] h-[120%] relative justify-center items-center bg-[#161616] overflow-hidden transform rotate-[-3deg] origin-bottom-left">
         <video
           src={Video}
-          type="video/mp4"
+
           loop
           muted
           autoPlay
@@ -131,7 +131,7 @@ function LandingScreen() {
         </div>
       </div>
 
-      <div className="image3-gradient w-full md:h-[320px] grid grid-cols-1 md:grid-cols-3 items-start p-8 md:px-32 md:py-16 gap-8 md:gap-32">
+      <div className="image3-gradient w-full md:h-[320px] grid grid-cols-1 md:grid-cols-3 items-start p-8 md:px-32 md:py-16 gap-8 md:gap-32 text-white">
         {/*<div className={'flex justify-center items-center'}>*/}
         {/*<div className={'bg-black bg-opacity-90 w-fit h-fit p-8 rounded-3xl'}>*/}
         {/*  <img src={Logo} alt={'Logo'} width={300} height={300}/>*/}
@@ -154,7 +154,7 @@ function LandingScreen() {
             url={'mailto:igraona@p23.io'}
           />
         </div>
-        <div className={'flex flex-col gap-2 text-xl justify-center items-start'}>
+        <div className={'flex flex-col gap-2 text-xl justify-center items-start text-white'}>
           <h3 className='text-2xl'>Linkovi</h3>
           <FooterLink
             Icon={<FacebookIcon className={'!w-8 !h-8'} />}

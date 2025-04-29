@@ -1,96 +1,167 @@
-import { Modal, Tabs } from 'antd'
-import { useNavigate } from 'react-router'
-import { useState } from 'react';
-import MultiDayForm from './MultiDayForm';
-import OneDayForm from './OneDayForm';
-import { useCreate } from '@refinedev/core';
-import ShowTournaments from '../ShowTournaments';
+import {Button, Checkbox, Form, Input, Layout, Select, Space, theme} from 'antd'
+import {useNavigate} from 'react-router'
+import React, {useState} from 'react';
+import {useCreate} from '@refinedev/core';
+import {useSelect} from "@refinedev/antd";
+import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 
-const { TabPane } = Tabs
+const {Content} = Layout
 
-type MultiDayFormValues = {
-    tournamentName: string
-    game: string
-    prize: string
-    numOfPlayersPerT: number
-    numOfTeams: number
-    lastsFrom: string
-    lastsUntil: string
-}
-
-type OneDayFormValues = {
-    tournamentName: string
-    game: string
-    prize: string
-    numOfPlayersPerT: number
-    numOfTeams: number
-    dateOfT: string
-}
 
 const CreateTournament = () => {
-    const { mutate, isLoading, isSuccess, error } = useCreate();
-
-    const [isModalVisible, setIsModalVisible] = useState(true);
+    const {mutate, isLoading, isSuccess, error} = useCreate();
     const navigate = useNavigate();
+    const [checked, setChecked] = useState(false);
 
-    const goToListPage = () => {
-        setIsModalVisible(false)
-        navigate('/tournaments');
+    const toggleChecked = () => {
+        setChecked(!checked);
     };
 
-    const onFinishMulti = (values: MultiDayFormValues) => {
+
+    const {selectProps} = useSelect({
+        resource: 'games',
+        optionLabel: "name",
+        optionValue: "name",
+    })
+
+    const {
+        token: {colorBgContainer, borderRadiusLG},
+    } = theme.useToken();
+
+    const onFinish = (values: any) => {
         mutate({
-            resource: "tournaments",
+            resource: 'tournaments',
             values: {
-                tournamentName: values.tournamentName,
-                game: values.game,
-                typeOfT: "MultiDay",
-                prize: values.prize,
-                numOfPlayersPerT: values.numOfPlayersPerT,
-                numOfTeams: values.numOfTeams,
-                lastsFrom: values.lastsFrom,
-                lastsUntil: values.lastsUntil,
-            },
-        });
-        navigate('/tournaments');
+                ...values
+            }
+        })
+        navigate('/tournaments')
     }
 
-    const onFinishOne = (values: OneDayFormValues) => {
-        mutate({
-            resource: "tournaments",
-            values: {
-                tournamentName: values.tournamentName,
-                game: values.game,
-                typeOfT: "OneDay",
-                prize: values.prize,
-                numOfPlayersPerT: values.numOfPlayersPerT,
-                numOfTeams: values.numOfTeams,
-                dateOfT: values.dateOfT,
-            },
-        });
-        navigate('/tournaments');
-    }
 
     return (
-        <ShowTournaments>
-            <Modal
-                open={isModalVisible}
-                mask={true}
-                onCancel={goToListPage}
-                title="Napravi Turnir"
-                width={512}
-                footer={null}
-            >
-                <Tabs defaultActiveKey="1" centered>
-                    <TabPane tab="MultiDay" key="1">
-                        <MultiDayForm onFinish={onFinishMulti} />
-                    </TabPane>
-                    <TabPane tab="OneDay" key="2">
-                        <OneDayForm onFinish={onFinishOne} />
-                    </TabPane>
-                </Tabs>
-            </Modal>
-        </ShowTournaments>
+        <Layout className="h-screen" style={{display: 'flex', flexDirection: 'row'}}>
+            <Layout style={{flex: 1, backgroundColor: '#f0f2f5'}}>
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        padding: 24,
+                        minHeight: 280,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG,
+                    }}
+                >
+                    <Form layout="vertical" onFinish={onFinish}>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+                        </Form.Item>
+                        <Form.Item
+                            label="Ime turnira"
+                            name={'name'}
+                            rules={[{required: true}]}
+                        >
+                            <Input placeholder="Ime turnia"/>
+                        </Form.Item>
+                        <Form.Item
+                            label="Igra"
+                            name={'game'}
+                            rules={[{required: true}]}
+                        >
+                            <Select
+                                placeholder="Igra"
+                                {...selectProps}
+                                filterOption={(input, option) =>
+                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                }
+                            />
+                        </Form.Item>
+                        <Form.List name="prizes" rules={[{
+                            validator: async (_, prizes) => {
+                                if (!prizes || prizes.length === 0) {
+                                    return Promise.reject(new Error('At least one prize is required'));
+                                }
+                            }
+                        }]}>
+                            {(fields, {add, remove}) => (
+                                <>
+                                    {fields.map(({key, name, ...restField}) => (
+                                        <Space key={key} style={{display: 'flex', marginBottom: 8}} align="baseline">
+                                            <Form.Item
+                                                {...restField}
+                                                name={name}
+                                                rules={[{required: true}]}
+                                            >
+                                                <Input placeholder={`${name + 1}`}/>
+                                            </Form.Item>
+                                            <MinusCircleOutlined onClick={() => remove(name)}/>
+                                        </Space>
+                                    ))}
+                                    <Form.Item>
+                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>}>
+                                            Add field
+                                        </Button>
+                                    </Form.Item>
+                                </>
+                            )}
+                        </Form.List>
+                        <div className={'flex justify-evenly'}>
+                            <Form.Item
+                                label="Broj ljudi u timu"
+                                name={'teamSizeRequired'}
+                                rules={[{required: true}]}
+                            >
+                                <Input placeholder="Broj ljudi u timu" type="number"/>
+                            </Form.Item>
+                            <Form.Item
+                                label="Broj ljudi u timu"
+                                name={'teamSizeOptional'}
+                            >
+                                <Input placeholder="Broj ljudi u timu" type="number"/>
+                            </Form.Item>
+                        </div>
+                        <Form.Item
+                            label="Broj timova"
+                            name={'maxNumberOfParticipants'}
+                            rules={[{required: true}]}
+                        >
+                            <Input placeholder="Broj timova" type="number"/>
+                        </Form.Item>
+                        <div className="flex justify-evenly">
+                            <Form.Item
+                                label="Traje od"
+                                name={'startingAt'}
+                                rules={[{required: true}]}
+                            >
+                                <Input type="date"/>
+                            </Form.Item>
+                            <div className="flex space-x-2">
+                                <p>
+                                    <Checkbox checked={checked} onClick={toggleChecked}>
+                                        Multiday
+                                    </Checkbox>
+
+                                </p>
+                                {
+                                    checked ?
+                                        <Form.Item
+                                            label="Traje do"
+                                            name={'endingAt'}
+                                            rules={[{required: checked}]}
+                                            hidden={!checked}
+                                        >
+                                            <Input type="date"/>
+                                        </Form.Item>
+                                        :
+                                        <></>
+                                }
+                            </div>
+                        </div>
+                    </Form>
+                </Content>
+            </Layout>
+        </Layout>
     )
 }
 

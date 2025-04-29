@@ -91,6 +91,6 @@ html {
     background-repeat: no-repeat;
 }
 
-.button:hover > .text {
+.button:hover>.text {
     color: #ebaaaa;
 }

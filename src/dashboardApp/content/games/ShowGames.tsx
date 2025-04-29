@@ -1,14 +1,13 @@
-import React, {PropsWithChildren} from 'react';
-import {Layout, theme, Table, Avatar, Space} from 'antd';
-import {AntDesignOutlined} from '@ant-design/icons';
+import React, {FC} from 'react'
+import {Avatar, Layout, Space, Table, theme} from "antd";
+import {CreateButton, DeleteButton, EditButton} from "@refinedev/antd";
+import {useNavigate} from 'react-router';
+import {useList} from "@refinedev/core";
+import {AntDesignOutlined} from "@ant-design/icons";
 
 const {Content} = Layout;
 
-import {useList} from "@refinedev/core"
-import {CreateButton, DeleteButton, EditButton} from '@refinedev/antd';
-import {useNavigate} from 'react-router';
-
-const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
+const ShowGames: FC = () => {
     const navigate = useNavigate()
 
     const {
@@ -16,20 +15,20 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
     } = theme.useToken();
 
     const {data, isLoading} = useList({
-        resource: "tournaments",
+        resource: "games",
     })
 
     const columns = [
         {
             title: 'Avatar',
-            dataIndex: 'avatar',
-            key: 'avatar',
-            render: () => <Avatar icon={<AntDesignOutlined/>}/>,
+            dataIndex: 'imageUrl',
+            key: 'imageUrl',
+            render: () => <Avatar/>,
         },
         {
-            title: 'Naziv turnira',
+            title: 'Naziv Igre',
             dataIndex: 'name',
-            key: 'tournamentName',
+            key: 'name',
         },
         {
             title: 'Id',
@@ -41,8 +40,8 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
             key: 'actions',
             render: (_: any, record: any) => (
                 <Space>
-                    <EditButton hideText size="small" resource="tournaments" recordItemId={record.id}/>
-                    <DeleteButton hideText size="small" resource="tournaments" recordItemId={record.id}/>
+                    {/*<EditButton hideText size="small" resource="tournaments" recordItemId={record.id}/>*/}
+                    <DeleteButton hideText size="small" resource="games" recordItemId={record.id}/>
                 </Space>
             ),
         },
@@ -62,8 +61,8 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
                 >
                     <div style={{marginBottom: 16}}>
                         <CreateButton
-                            resource="tournaments"
-                            onClick={() => navigate('/tournaments/new')}
+                            resource="games"
+                            onClick={() => navigate('/games/new')}
                         />
                     </div>
 
@@ -84,12 +83,10 @@ const ShowTournaments: React.FC<PropsWithChildren<{}>> = ({children}) => {
                             },
                         })}
                     />
-
-                    {children}
                 </Content>
             </Layout>
         </Layout>
-    );
-};
+    )
+}
 
-export default ShowTournaments;
+export default ShowGames
