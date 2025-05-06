@@ -1,45 +1,38 @@
-import React, { PropsWithChildren } from 'react';
-import { Layout, theme, Table, Avatar, Space, Button } from 'antd';
-import { AntDesignOutlined } from '@ant-design/icons';
+import React, {PropsWithChildren} from 'react';
+import {Layout, theme, Table, Space} from 'antd';
 
-const { Content } = Layout;
+const {Content} = Layout;
 
-import { useOne } from "@refinedev/core"
-import { DeleteButton } from '@refinedev/antd';
-import { useParams } from 'react-router';
-
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
+import {useOne} from "@refinedev/core"
+import {useParams} from 'react-router';
 
 import BanPlayer from './BanPlayer';
 
-const ShowPlayers: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-    const { id } = useParams();
-    const { name } = useParams()
+const ShowPlayers: React.FC<PropsWithChildren<{}>> = ({children, teamId}) => {
+    const {id} = useParams();
 
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
-    const { data, isLoading } = useOne({
-        resource: "tournaments",
-        id: id
+    const {data, isLoading} = useOne({
+        resource: "participants",
+        id: id,
+        meta: {
+            teamId: teamId,
+        },
     })
-
-    console.log('evo', data?.data.teams)
 
     const columns = [
         {
-            title: 'Avatar',
-            dataIndex: 'avatar',
-            key: 'avatar',
-            render: () => <Avatar icon={<AntDesignOutlined />} />,
-        },
-        {
             title: 'Ime igrača',
-            dataIndex: 'name',
-            key: 'name',
-            render: (name: string) => <span>{name}</span>,
+            dataIndex: 'player1',
+            key: 'player1',
+            render: (_: any, record: any) => (
+                <Space>
+                    {record.url}
+                </Space>
+            ),
         },
         {
             title: 'Akcije',
@@ -53,17 +46,12 @@ const ShowPlayers: React.FC<PropsWithChildren<{}>> = ({ children }) => {
         },
     ];
 
-    const players = data?.data?.teams
-        ?.find((team: any) => team.name === name)
-        ?.players?.map((player: any) => ({
-            key: `${name}-${player}`,
-            name: player,
-            teamName: name,
-        })) || [];
+    console.log(data?.data.players)
 
     return (
-        <Layout className="h-screen" style={{ display: 'flex', flexDirection: 'row' }}>
-            <Layout style={{ flex: 1, backgroundColor: '#f0f2f5' }}>
+        <Layout className="h-screen" style={{display: 'flex', flexDirection: 'row'}}>
+
+            <Layout style={{flex: 1, backgroundColor: '#f0f2f5'}}>
                 <Content
                     style={{
                         margin: '24px 16px',
@@ -76,11 +64,11 @@ const ShowPlayers: React.FC<PropsWithChildren<{}>> = ({ children }) => {
 
                     <Table
                         loading={isLoading}
-                        dataSource={players}
+                        dataSource={data?.data.players}
                         columns={columns}
                         rowKey="id"
                         pagination={{
-                            pageSize: 5,
+                            pageSize: 6,
                             position: ['bottomCenter'],
                         }}
                         onRow={(record) => ({
@@ -100,6 +88,7 @@ const ShowPlayers: React.FC<PropsWithChildren<{}>> = ({ children }) => {
                     {children}
                 </Content>
             </Layout>
+
         </Layout>
     );
 };

@@ -1,16 +1,21 @@
-import {Edit, useForm, useSelect} from "@refinedev/antd";
-import {Button, Checkbox, Form, Input, Layout, Select, Space, theme} from "antd";
-import MultiDayEdit from "./MultiDayEdit";
-import OneDayEdit from "./OneDayEdit";
-import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {CreateButton, useForm, useSelect} from "@refinedev/antd";
+import {Button, Checkbox, DatePicker, Form, Input, Layout, Select, Space, theme} from "antd";
+import {ArrowLeftOutlined, MinusCircleOutlined, PlusOutlined, PlusSquareOutlined} from "@ant-design/icons";
 import React from "react";
+import {useNavigate} from "react-router";
+import dayjs from "dayjs";
 
 const {Content} = Layout
 
 const EditTournament = () => {
     const {formProps, saveButtonProps, query, formLoading} = useForm();
+    const navigate = useNavigate();
+    const [checked, setChecked] = React.useState<boolean>(false);
 
     const tournament = query?.data?.data;
+
+    console.log(tournament);
+
 
     const {selectProps} = useSelect({
         resource: 'games',
@@ -18,12 +23,17 @@ const EditTournament = () => {
         optionValue: "name",
     })
 
+    const toggleChecked = () => {
+        setChecked(!checked);
+    };
+
+
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
     return (
-        <Layout className="h-screen overflow-hidden" style={{display: 'flex', flexDirection: 'row'}}>
+        <Layout className="h-screen" style={{display: 'flex', flexDirection: 'row'}}>
             <Layout style={{flex: 1, backgroundColor: '#f0f2f5'}}>
                 <Content
                     style={{
@@ -36,21 +46,39 @@ const EditTournament = () => {
                 >
                     <Form layout="vertical" {...formProps}>
                         <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
+                            <div className="flex justify-between w-full">
+                                <CreateButton
+                                    type="primary"
+                                    className="antbutton"
+                                    onClick={() => navigate('/tournaments')}
+                                    icon={<ArrowLeftOutlined/>}
+                                >
+                                    Back
+                                </CreateButton>
+
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="antbutton"
+                                    icon={<PlusSquareOutlined/>}
+                                >
+                                    Submit
+                                </Button>
+
+                            </div>
                         </Form.Item>
                         <Form.Item
                             label="Ime turnira"
                             name={'name'}
                             rules={[{required: true}]}
                         >
-                            <Input placeholder="Ime turnia"/>
+                            <Input placeholder="Ime turnira"/>
                         </Form.Item>
                         <Form.Item
                             label="Igra"
                             name={'game'}
                             rules={[{required: true}]}
+                            className='flex flex-col'
                         >
                             <Select
                                 placeholder="Igra"
@@ -70,19 +98,19 @@ const EditTournament = () => {
                             {(fields, {add, remove}) => (
                                 <>
                                     {fields.map(({key, name, ...restField}) => (
-                                        <Space key={key} style={{display: 'flex', marginBottom: 8}}
-                                               align="baseline">
+                                        <Space key={key} style={{display: 'flex', marginBottom: 8}} align="baseline">
                                             <Form.Item
                                                 {...restField}
                                                 name={name}
                                                 rules={[{required: true}]}
+                                                label={`${name + 1}. Mjesto`}
                                             >
                                                 <Input placeholder={`${name + 1}`}/>
                                             </Form.Item>
                                             <MinusCircleOutlined onClick={() => remove(name)}/>
                                         </Space>
                                     ))}
-                                    <Form.Item>
+                                    <Form.Item label={"Nagrade"}>
                                         <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined/>}>
                                             Add field
                                         </Button>
@@ -118,16 +146,20 @@ const EditTournament = () => {
                                 name={'startingAt'}
                                 rules={[{required: true}]}
                             >
-                                <Input type="date"/>
+                                <Input type={'date'}/>
                             </Form.Item>
-                            <div className="flex space-x-2">
-                                <Form.Item
-                                    label="Traje do"
-                                    name={'endingAt'}
-                                >
-                                    <Input type="date"/>
-                                </Form.Item>
-                            </div>
+
+                            {
+                                tournament?.startingAt != tournament?.endingAt ?
+                                    <Form.Item
+                                        label="Traje do"
+                                        name={'endingAt'}
+                                    >
+                                        <Input type={'date'}/>
+                                    </Form.Item>
+                                    :
+                                    <></>
+                            }
                         </div>
                     </Form>
                 </Content>

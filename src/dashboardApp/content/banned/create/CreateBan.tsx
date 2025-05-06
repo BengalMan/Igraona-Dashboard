@@ -7,7 +7,7 @@ import {ArrowLeftOutlined, PlusSquareOutlined} from "@ant-design/icons";
 
 const {Content} = Layout
 
-const CreateGame: FC = () => {
+const CreateBan: FC = () => {
     const navigate = useNavigate()
     const {mutate} = useCreate()
 
@@ -26,14 +26,14 @@ const CreateGame: FC = () => {
 
     const onFinish = (values: { name: string; imageUrl: string }) => {
         mutate({
-                resource: 'games',
+                resource: 'banned',
                 values: {
                     name: values.name,
                     imageUrl: values.imageUrl,
                 },
             }
         )
-        navigate('/games')
+        navigate('/banned')
     }
 
     return (
@@ -51,10 +51,11 @@ const CreateGame: FC = () => {
                     <Form layout="vertical" onFinish={onFinish}>
                         <Form.Item>
                             <div className="flex justify-between w-full">
+
                                 <CreateButton
                                     type="primary"
                                     className="antbutton"
-                                    onClick={() => navigate('/games')}
+                                    onClick={() => navigate('/banned')}
                                     icon={<ArrowLeftOutlined/>}
                                 >
                                     Back
@@ -72,18 +73,18 @@ const CreateGame: FC = () => {
                             </div>
                         </Form.Item>
                         <Form.Item
-                            label={"Ime igre"}
+                            label={"Ime igrača"}
                             name={'name'}
                             rules={[{required: true}]}
                         >
-                            <Input placeholder={'Ime igre'}/>
+                            <Input placeholder={'Ime igrača'}/>
                         </Form.Item>
                         <Form.Item
-                            label={"Slika igre"}
-                            name={'imageUrl'}
+                            label={"Ime igrača"}
+                            name={'name'}
                             rules={[{required: true}]}
                         >
-                            <Input type={'file'} onChange={uploadFile}/>
+                            <Input placeholder={'Ime igrača'}/>
                         </Form.Item>
                         <Avatar src={imageUrl} size={100}/>
                     </Form>
@@ -93,4 +94,4 @@ const CreateGame: FC = () => {
     )
 }
 
-export default CreateGame
+export default CreateBan

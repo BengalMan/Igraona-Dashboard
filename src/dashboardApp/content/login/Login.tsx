@@ -9,36 +9,36 @@ import {
     theme,
     Typography,
 } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import {LockOutlined, MailOutlined} from "@ant-design/icons";
 
 import logo from '../../items/logo.png'
-import { useLogin } from "@refinedev/core";
-import { useNavigate } from "react-router";
+import {useLogin} from "@refinedev/core";
+import {useNavigate} from "react-router";
 
-const { useToken } = theme;
-const { useBreakpoint } = Grid;
-const { Text, Title } = Typography;
+const {useToken} = theme;
+const {useBreakpoint} = Grid;
+const {Text, Title} = Typography;
 
 export default function Login() {
-    const { mutate, isLoading } = useLogin();
+    const {mutate, isLoading} = useLogin();
     const navigate = useNavigate();
-    const { token } = useToken();
+    const {token} = useToken();
     const screens = useBreakpoint();
 
     const onFinish = (data: any) => {
         console.log(data);
-        const { email, password } = data;
-        mutate({ email, password });
+        const {email, password} = data;
+        mutate({email, password});
         navigate('/dashboard')
     };
 
     const admin = {
-        email: 'p23.io@gmail.com',
+        email: 'admin@igraona.gg',
         password: 'igraona123',
     };
 
     if (isLoading) {
-        return <div style={{ textAlign: "center", paddingTop: "20px" }}><Spin size="large" /></div>;
+        return <div style={{textAlign: "center", paddingTop: "20px"}}><Spin size="large"/></div>;
     }
 
     const styles = {
@@ -80,31 +80,42 @@ export default function Login() {
     return (
         <section style={styles.section}>
             <div style={styles.container} className="bg-slate-100 rounded-xl ">
-                <div style={{ ...styles.header, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <img src={logo} alt="Loading..." className="w-[30%] h-[30%]" />
-                    <Title style={{ ...styles.title, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} className="mt-4">Prijavi se!</Title>
-                    <Text style={styles.text}>Dobrodošao Admine, upiši svoje podatke!</Text>
+                <div style={{
+                    ...styles.header,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column'
+                }}>
+                    <img src={logo} alt="Loading..." className="w-[30%] h-[30%]"/>
+                    <Title style={{
+                        ...styles.title,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column'
+                    }} className="mt-4">Prijavi se!</Title>
                 </div>
                 <Form
                     name="normal_login"
-                    initialValues={{ remember: true }}
+                    initialValues={{remember: true}}
                     onFinish={onFinish}
                     layout="vertical"
                     requiredMark="optional"
                 >
                     <Form.Item
                         name="email"
-                        rules={[{ type: "email", required: true, message: "Molimo, upišite svoj Email!" }]}
+                        rules={[{type: "email", required: true, message: "Molimo, upišite svoj Email!"}]}
                     >
-                        <Input prefix={<MailOutlined className="pr-1" />} placeholder="Email" />
+                        <Input prefix={<MailOutlined className="pr-1"/>} placeholder="Email"/>
                     </Form.Item>
                     <Form.Item
                         name="password"
-                        rules={[{ required: true, message: "Molimo, upišite svoju Šifru!" }]}
+                        rules={[{required: true, message: "Molimo, upišite svoju Šifru!"}]}
                     >
-                        <Input.Password prefix={<LockOutlined className="pr-1" />} placeholder="Šifra" />
+                        <Input.Password prefix={<LockOutlined className="pr-1"/>} placeholder="Šifra"/>
                     </Form.Item>
-                    <Form.Item style={{ marginBottom: "0px" }}>
+                    <Form.Item style={{marginBottom: "0px"}}>
                         <Button block type="primary" htmlType="submit" className="mb-4">
                             Prijavi se
                         </Button>

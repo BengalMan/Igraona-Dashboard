@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
+    TrophyOutlined,
+    HomeOutlined,
+    AimOutlined,
+    DeleteOutlined,
 } from '@ant-design/icons';
 import {Layout, Menu, Button} from 'antd';
 import {useLocation, useNavigate} from 'react-router';
 
+import logo from '../items/logo.png'
+
 import LogOut from './LogOut';
-import GamesIcon from "@mui/icons-material/Games";
 
 const {Sider} = Layout;
 
@@ -25,10 +25,15 @@ const Sidebar = () => {
             '1': '/dashboard',
             '2': '/tournaments',
             '3': '/games',
-            '4': '/dodatno',
+            '4': '/banned',
         };
 
-        navigate(routes[key]);
+        const targetRoute = routes[key];
+        const currentPath = location.pathname;
+
+        if (!currentPath.startsWith(targetRoute) || currentPath !== targetRoute) {
+            navigate(targetRoute);
+        }
     };
 
     const getSelectedKey = () => {
@@ -36,12 +41,13 @@ const Sidebar = () => {
         if (currentPath.includes('/dashboard')) return '1';
         if (currentPath.includes('/tournaments')) return '2';
         if (currentPath.includes('/games')) return '3';
-        if (currentPath.includes('/dodatno')) return '4';
+        if (currentPath.includes('/banned')) return '4';
         return '1';
     };
 
     return (
-        <Sider trigger={null} collapsible collapsed={collapsed} width={240} className="bg-[#161616]">
+        <Sider trigger={null} collapsible collapsed={collapsed} width={240} collapsedWidth={90}
+               className="bg-[#161616]">
             <div
                 style={{
                     padding: '0 16px',
@@ -54,13 +60,22 @@ const Sidebar = () => {
             >
                 <Button
                     type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
                     onClick={() => setCollapsed(!collapsed)}
-                    style={{
-                        fontSize: '18px',
-                        color: '#fff',
-                    }}
-                />
+                    className="flex items-center bg-transparent w-full h-full border-none hover:scale-105 hover:brightness-90 transition-all duration-300"
+                >
+                    <img
+                        src={logo}
+                        alt="Loading..."
+                        className={`${collapsed ? "w-10 h-10" : "w-10 h-10"} object-contain transition-all duration-300`}
+                    />
+                    {!collapsed && (
+                        <h1 className="text-[#8D151F] font-bold text-md ml-3 transition-all duration-300">
+                            Igraona Igraona
+                        </h1>
+                    )}
+                </Button>
+
+
             </div>
 
             <Menu
@@ -71,30 +86,30 @@ const Sidebar = () => {
                 items={[
                     {
                         key: '1',
-                        icon: <UserOutlined/>,
+                        icon: <HomeOutlined/>,
                         label: 'Početna',
                     },
                     {
                         key: '2',
-                        icon: <VideoCameraOutlined/>,
+                        icon: <TrophyOutlined/>,
                         label: 'Turniri',
                     },
                     {
                         key: '3',
-                        icon: <GamesIcon/>,
+                        icon: <AimOutlined/>,
                         label: 'Games',
                     },
                     {
                         key: '4',
-                        icon: <UploadOutlined/>,
-                        label: 'Dodatno',
+                        icon: <DeleteOutlined/>,
+                        label: 'Banned',
                     },
                 ]}
                 onSelect={handleNavigation}
             />
 
             <div style={{paddingTop: '20px', textAlign: 'center', borderTop: '1px solid #333'}}>
-                <LogOut/>
+                <LogOut collapsed={collapsed}/>
             </div>
 
         </Sider>

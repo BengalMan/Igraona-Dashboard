@@ -1,12 +1,13 @@
 import React, {FC} from 'react'
 import {Avatar, Layout, Space, Table, theme} from "antd";
-import {CreateButton, DeleteButton} from "@refinedev/antd";
+import {CreateButton, DeleteButton, EditButton} from "@refinedev/antd";
 import {useNavigate} from 'react-router';
 import {useList} from "@refinedev/core";
+import {AntDesignOutlined, ArrowLeftOutlined} from "@ant-design/icons";
 
 const {Content} = Layout;
 
-const ShowGames: FC = () => {
+const ShowBanned: FC = () => {
     const navigate = useNavigate()
 
     const {
@@ -14,20 +15,24 @@ const ShowGames: FC = () => {
     } = theme.useToken();
 
     const {data, isLoading} = useList({
-        resource: "games",
+        resource: "banned",
     })
 
     const columns = [
         {
-            title: 'Avatar',
-            dataIndex: 'imageUrl',
-            key: 'imageUrl',
-            render: () => <Avatar/>,
+            title: 'Faceit Igrača',
+            dataIndex: 'faceit',
+            key: 'faceit',
+            render: (_: any, record: any) => (
+                <Space>
+                    <a href={record.faceit}>{record.faceit}</a>
+                </Space>
+            ),
         },
         {
-            title: 'Naziv Igre',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Razlog Bana',
+            dataIndex: 'reason',
+            key: 'reason',
         },
         {
             title: 'Id',
@@ -40,7 +45,7 @@ const ShowGames: FC = () => {
             render: (_: any, record: any) => (
                 <Space>
                     {/*<EditButton hideText size="small" resource="tournaments" recordItemId={record.id}/>*/}
-                    <DeleteButton hideText size="small" resource="games" recordItemId={record.id}/>
+                    <DeleteButton hideText size="small" resource="banned" recordItemId={record.id}></DeleteButton>
                 </Space>
             ),
         },
@@ -62,7 +67,7 @@ const ShowGames: FC = () => {
                         <CreateButton
                             type="primary"
                             className="antbutton"
-                            onClick={() => navigate('/games/new')}
+                            onClick={() => navigate('/banned/new')}
                         >
                             Create
                         </CreateButton>
@@ -77,13 +82,6 @@ const ShowGames: FC = () => {
                             pageSize: 5,
                             position: ['bottomCenter'],
                         }}
-                        onRow={(record) => ({
-                            onClick: (event) => {
-                                const target = event.target as HTMLElement;
-                                if (target.closest('button')) return;
-                                navigate(`/tournaments/${record.id}`);
-                            },
-                        })}
                     />
                 </Content>
             </Layout>
@@ -91,4 +89,4 @@ const ShowGames: FC = () => {
     )
 }
 
-export default ShowGames
+export default ShowBanned

@@ -23,3 +23,20 @@ html {
     font-family: "Roboto", sans-serif;
     font-style: normal;
 }
+
+.ant-menu-item-selected {
+    border-left: 4px solid #8D151F !important;
+    background-color: #2a2a2a !important;
+}
+
+.antbutton {
+    background-color: #8D151F;
+    color: white;
+    font-weight: bold;
+}
+
+.antbutton:hover {
+    background-color: #6e1018 !important;
+    color: white !important;
+    box-shadow: none !important;
+}
