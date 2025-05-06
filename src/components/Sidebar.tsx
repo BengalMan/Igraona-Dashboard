@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -6,10 +6,10 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button } from 'antd';
-import { useLocation, useNavigate } from 'react-router';
+import {Layout, Menu, Button} from 'antd';
+import {useLocation, useNavigate} from 'react-router';
 
-const { Sider } = Layout;
+const {Sider} = Layout;
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -17,7 +17,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleNavigation = ({ key }: { key: string }) => {
+    const handleNavigation = ({key}: { key: string }) => {
         const routes: { [key: string]: string } = {
             '1': '/dashboard',
             '2': '/tournaments',
@@ -49,7 +49,7 @@ const Sidebar = () => {
             >
                 <Button
                     type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
                     onClick={() => setCollapsed(!collapsed)}
                     style={{
                         fontSize: '18px',
@@ -66,17 +66,17 @@ const Sidebar = () => {
                 items={[
                     {
                         key: '1',
-                        icon: <UserOutlined />,
+                        icon: <UserOutlined/>,
                         label: 'Početna',
                     },
                     {
                         key: '2',
-                        icon: <VideoCameraOutlined />,
+                        icon: <VideoCameraOutlined/>,
                         label: 'Turniri',
                     },
                     {
                         key: '3',
-                        icon: <UploadOutlined />,
+                        icon: <UploadOutlined/>,
                         label: 'Dodatno',
                     },
                 ]}
